@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        .h-bar  {
+            background-color: #def5ff;
+        }
+    </style>
+</head>
+<body>
+
+</body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    var data = [10, 15, 30, 50, 80, 65, 55, 30, 20, 10, 8];
+
+/*
+    var data2=[
+        {times:'2015-09-17 1:00',count:2000},
+        {times:'2015-09-17 2:00',count:3000},
+        {times:'2015-09-17 3:00',count:4000},
+        {times:'2015-09-17 4:00',count:5000},
+        {times:'2015-09-17 5:00',count:6000},
+        {times:'2015-09-17 6:00',count:7000},
+        {times:'2015-09-17 7:00',count:2000},
+        {times:'2015-09-17 8:00',count:5000},
+        {times:'2015-09-17 9:00',count:9000},
+    ];
+*/
+    var data2=[];
+    var i = 0;
+
+
+
+    function render() {
+        d3.select("body").selectAll("div.h-bar")
+                .data(data2)
+                .enter()
+                .append("div")
+                .attr("class", "h-bar")
+                .append("span");
+
+        // Update
+        d3.select("body").selectAll("div.h-bar")
+                .data(data2)
+                .style("width", function (d) {
+                    return (d.count) + "px";
+                })
+
+                .select("span")
+                .text(function (d) {
+                    return d.times;
+                });
+
+
+        // Exit
+        d3.select("body").selectAll("div.h-bar")
+                .data(data)
+                .exit()
+                .remove();
+    }
+
+
+    function CurentTime()
+    {
+        var now = new Date();
+
+        var year = now.getFullYear();       //年
+        var month = now.getMonth() + 1;     //月
+        var day = now.getDate();            //日
+
+        var hh = now.getHours();            //时
+        var mm = now.getMinutes();          //分
+        var ss = now.getSeconds();          //秒
+
+        var clock = year + "-";
+
+        if(month < 10)
+            clock += "0";
+
+        clock += month + "-";
+
+        if(day < 10)
+            clock += "0";
+        clock += day + " ";
+
+        if(hh < 10)
+            clock += "0";
+        clock += hh + ":";
+
+        if (mm < 10) clock += '0';
+        clock += mm+ ":";
+
+        if (ss < 10) clock += '0';
+        clock += ss;
+
+        return(clock);
+    }
+
+
+
+    setInterval(function () {
+        var mode = {times:CurentTime(),count:Math.round(Math.random() * 1000)}
+        if(i<20){
+            data2.push(mode);
+        }else{
+            data2.shift();
+            data2.push(mode);
+        }
+        i++;
+        render(data2);
+    }, 1500);
+</script>
+</html>
