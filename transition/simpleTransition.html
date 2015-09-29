@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+
+<script>
+    var width = 500,
+            height = 500;
+
+    var svg = d3.select("body").append("svg");
+    svg.attr("width",width)
+            .attr("height",height);
+
+    var rect = svg.append("rect")
+    rect.attr("fill" , "steelblue")
+            .attr("x" , 10)
+            .attr("y" , 10)
+            .attr("width" , 100)
+            .attr("height" , 30)
+            .transition()
+            .duration(2000)
+            .ease("bounce")
+            .attr("width" , 300)
+            .attr("fill" , "red")
+            .transition()
+            .duration(3000)
+            .attr("width" , 0)
+            .remove();
+
+    var text = svg.append("text")
+            .attr("fill" , "white")
+            .attr("x" , 100)
+            .attr("y" , 10)
+            .attr("dy" , "1.2em")
+            .attr("text-anchor" , "end")
+            .text(100);
+
+    var initx = text.attr("x");
+    var initText = text.text();
+    console.log(initx);
+    console.log(initText);
+
+    text.transition()
+            .duration(2000)
+            .tween("text" , function() {
+                return function(t) {
+                    d3.select(this)
+                            .attr("x" , Number(initx) + t * 200)
+                            .text(Math.floor(Number(initText) + t * 200));
+                }
+            })
+            .transition()
+            .duration(1000)
+            .tween("text" , function () {
+                return function (t) {
+                    d3.select(this)
+                            .attr("x" , 300 + t * (-200))
+                            .text(Math.floor(300 + t * (-200)));
+                }
+            });
+
+
+
+
+    console.log(rect);
+</script>
+
+</body>
+</html>

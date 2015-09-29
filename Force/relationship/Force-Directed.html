@@ -1,0 +1,130 @@
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Force-Directed Graph</title>
+</head>
+
+<style>
+
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+
+
+
+    var width = 800;
+    var height = 800;
+    var img_width = 20;
+    var img_height = 20;
+
+
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width",width)
+            .attr("height",height);
+
+
+    d3.json("relationship.json",function(error,root){
+
+        var force = d3.layout.force()
+                .nodes(root.nodes)		//指定节点数组
+                .links(root.edges)		//指定连线数组
+                .size([width,height])	//指定范围
+                .linkDistance(80)	//指定连线长度
+                .charge([-1000]);	//相互之间的作用力,正为引力，负为斥力
+
+        force.start();	//开始作用，开始布局计算
+
+        console.log(root.nodes);
+        console.log(root.edges);
+
+        //添加连线
+        var svg_edges = svg.selectAll("forceLine")
+                .data(root.edges)
+                .enter()
+                .append("line")
+                .style("stroke","#ccc")
+              //  .style("stroke-width",1)
+                .style("stroke-width",function(d) {
+                    return d.degree;
+                })
+                .attr("class", "forceLine");
+
+        //添加节点间关系
+        var svg_edges_text = svg.selectAll("lineText")
+                .data(root.edges)
+                .enter()
+                .append("image")
+                .attr("width",img_width)
+                .attr("height",img_height)
+                .attr("class", "lineText")
+                .attr("xlink:href", function(d){
+                    return d.relationship;
+                });
+
+        var color = d3.scale.category20();
+
+        //添加节点
+        var svg_nodes = svg.selectAll("forceCircle")
+                .data(root.nodes)
+                .enter()
+                .append("circle")
+                .attr("class", "forceCircle")
+                .attr("r",20)
+                .style("fill",function(d,i){
+                    return color(i);
+                })
+                .call(force.drag);	//使得节点能够拖动
+
+        //添加描述节点的文字
+        var svg_texts = svg.selectAll("forceText")
+                .data(root.nodes)
+                .enter()
+                .append("text")
+                .attr("class", "forceText")
+                .attr("dy", ".3em")
+                .style("text-anchor", "middle")
+            //        .style("fill", "black")
+            //       .attr("dx", 20)
+            //       .attr("dy", 8)
+                .text(function(d){
+                    return d.name;
+                });
+
+
+        force.on("tick", function(){	//对于每一个时间间隔设置监听器
+
+            //更新连线坐标
+            svg_edges.attr("x1",function(d){ return d.source.x; })
+                    .attr("y1",function(d){ return d.source.y; })
+                    .attr("x2",function(d){ return d.target.x; })
+                    .attr("y2",function(d){ return d.target.y; });
+
+            //更新节点间关系
+            svg_edges_text.attr("x" , function(d) {return (d.source.x + d.target.x) / 2 - img_width / 2;})
+                    .attr("y" , function(d) {return (d.source.y + d.target.y) / 2 - img_height / 2 ;})
+
+            //更新节点坐标
+            svg_nodes.attr("cx",function(d){ return d.x; })
+                    .attr("cy",function(d){ return d.y; });
+
+            //更新文字坐标
+            svg_texts.attr("x", function(d){ return d.x; })
+                    .attr("y", function(d){ return d.y; });
+        });
+
+    });
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>  

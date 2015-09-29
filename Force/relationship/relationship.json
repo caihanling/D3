@@ -1,0 +1,31 @@
+{
+  "nodes": [
+    { "name": "AA" },
+    { "name": "BB" },
+    { "name": "CC" },
+    { "name": "DD" },
+    { "name": "EE" },
+    { "name": "FF" },
+    { "name": "GG" },
+    { "name": "HH" },
+    { "name": "II" },
+    { "name": "JJ" },
+    { "name": "KK" },
+    { "name": "LL" }
+  ],
+
+  "edges":[
+    { "source" : 0  , "target": 1 , "relationship" : "img/email.png" , "degree" : 1} ,
+    { "source" : 0  , "target": 2 , "relationship" : "img/game.png" , "degree" : 1} ,
+    { "source" : 0  , "target": 3 , "relationship" : "img/lover.png" , "degree" : 1} ,
+    { "source" : 0  , "target": 7 , "relationship" : "img/lover.png" , "degree" : 1} ,
+    { "source" : 1  , "target": 4 , "relationship" : "img/music.png" , "degree" : 1} ,
+    { "source" : 1  , "target": 5 , "relationship" : "img/sport.png" , "degree" : 1} ,
+    { "source" : 1  , "target": 6 , "relationship" : "img/lover.png" , "degree" : 5},
+    { "source" : 2  , "target": 7 , "relationship" : "img/music.png" , "degree" : 5} ,
+    { "source" : 2  , "target": 8 , "relationship" : "img/sport.png" , "degree" : 1} ,
+    { "source" : 2  , "target": 9 , "relationship" : "img/lover.png" , "degree" : 1},
+    { "source" : 2  , "target": 10 , "relationship" : "img/email.png" , "degree" : 3},
+    { "source" : 2  , "target": 11 , "relationship" : "img/music.png" , "degree" : 3}
+  ]
+}
