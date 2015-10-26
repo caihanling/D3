@@ -1,0 +1,11 @@
+{"data":
+  [
+  {"startAngle": 0, "endAngle": 0.1},
+  {"startAngle": 0.1, "endAngle": 0.2 },
+  {"startAngle": 0.2, "endAngle": 0.4 },
+  {"startAngle": 0.4 ,"endAngle": 0.6},
+  {"startAngle": 0.6 ,"endAngle": 0.7},
+  {"startAngle": 0.7 ,"endAngle": 0.9},
+  {"startAngle": 0.9, "endAngle": 1}
+  ]
+}

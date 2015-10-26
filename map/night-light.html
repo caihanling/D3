@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    var width = 900;
+    var height = 900;
+
+    var svg = d3.select("body").append("svg")
+            .attr("width" , width)
+            .attr("height" , height)
+            .append("g")
+            .attr("transform" , "translate(0,0)");
+
+    var projection = d3.geo.mercator()
+            .center([107,31])
+            .scale(700)
+            .translate([width/2 , height/2]);
+
+    //创建地理路径生成器
+    var path = d3.geo.path()
+            .projection(projection);
+
+    var defs = svg.append("defs");
+
+    //添加滤镜
+    var gaussian = defs.append("filter")
+            .attr("id" , "GaussianBlur");
+
+    gaussian.append("feGaussianBlur")
+            .attr("in" , "SourceGraphic")
+            .attr("stdDeviation" , "1");
+
+
+
+    d3.json("china.geojson" , function(error , root) {
+        if(error){
+            return console.error(error);
+        }
+        console.log(root.features);
+
+        var provinces = svg.selectAll("path")
+                .data(root.features)
+                .enter()
+                .append("path")
+                .attr("stroke" , "#000")
+                .attr("stroke-width" , 1)
+                .attr("d" , path);
+
+        d3.json("cities.json" , function(error , data) {
+            if(error) {
+                return  console.error(error);
+            }
+            var cities = [];
+            for(var i=0; i<data.provinces.length; i++) {
+                var local = data.provinces[i];
+                for(var j=0; j<local.children.length; j++) {
+                    var city = local.children[j];
+                    cities.push({
+                        name : city.name,
+                        log : Number(city.log),
+                        lat : Number(city.lat)
+                    })
+                }
+            }
+
+            //定义最大值和最小值的颜色
+            var a = d3.rgb(255,255,255);
+            var b = d3.rgb(255,255,0);
+
+            //颜色插值函数
+            var computeColor = d3.interpolate(a,b);
+
+            var points = svg.selectAll("circle")
+                    .data(cities)
+                    .enter()
+                    .append("circle")
+                    .attr("cx" , function(d){
+                        return projection([d.log , d.lat])[0];  //设定x轴坐标（根据经度纬度返回某城市的像素）
+                    })
+                    .attr("cy" , function(d) {
+                        return projection([d.log , d.lat])[1];  //设定y轴坐标
+                    })
+                    .attr("r" , 3)
+                    .attr("fill" , function() {
+                        var color = computeColor(Math.random());
+                        return color.toString();
+                    })
+                    .attr("filter" , "url(#" + gaussian.attr("id") + ")");
+
+            setInterval(getcolor , 2500);
+
+            function getcolor () {
+               points.attr("r" , 3)
+                       .transition()
+                       .duration(2000)
+                       .attr("r", 0)
+            }
+        });
+    });
+</script>
+</body>
+</html>

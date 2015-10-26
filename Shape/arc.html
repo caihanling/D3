@@ -21,6 +21,8 @@
     function render(innerRadius, endAngle) {
         if (!endAngle) endAngle = fullAngle;
 
+        console.log(innerRadius,endAngle);
+
         var data = [
             {startAngle: 0, endAngle: 0.1 * endAngle},
             {startAngle: 0.1 * endAngle, endAngle: 0.2 * endAngle},
@@ -31,6 +33,8 @@
             {startAngle: 0.9 * endAngle, endAngle: endAngle}
 
         ];
+
+        console.log(data);
 
         //设定外圆半径和内圆半径
         var arc = d3.svg.arc().outerRadius(200)

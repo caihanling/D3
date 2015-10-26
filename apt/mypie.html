@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>arc-transition</title>
+</head>
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript">
+    var width = 400,
+            height = 400,
+            fullAngle = 2 * Math.PI,  //角变量以弧度制为单位
+            colors = d3.scale.category20c();
+
+    var svg = d3.select("body").append("svg")
+            .attr("class","pie")
+            .attr("width",width)
+            .attr("height",height);
+
+
+
+
+    function render(innerRadius, endAngle) {
+        if (!endAngle) endAngle = fullAngle;
+
+        d3.json("data.json", function(error, data) {
+            if (error) throw error;
+            //设定外圆半径和内圆半径
+            var arc = d3.svg.arc().outerRadius(200)
+                    .innerRadius(innerRadius);
+            var transData = data;
+         //   transData.startAngle = parseFloat(data.startAngle) ;
+         //   transData.endAngle = parseFloat(data.endAngle);
+
+            console.log(transData);
+
+            svg.select("g").remove();
+
+            svg.append("g")
+                    .attr("transform","translate(200,200)")
+                    .selectAll("path.arc")
+                    .data(transData)
+                    .enter()
+                    .append("path")
+                    .attr("class","arc")
+                    .attr("fill",function(d,i) {return colors(i);})
+                    .transition().duration(1000)  //过度时间
+                    .attrTween("d", function(d) {  //渐变函数
+                        var start = {"startAngle":0 ,"endAngle":0 };
+                        var interpolate = d3.interpolate(start, d); //复合对象插值器
+                        return function(t){
+                            return arc(interpolate(t))
+                        };
+
+                    });
+
+        });
+
+
+    }
+
+    render(100);
+</script>
+
+<div class="control-group">
+    <button onclick="render(0)">Circle</button>
+    <button onclick="render(100)">Annulus(Donut)</button>
+    <button onclick="render(0,Math.PI)">Circular Sector</button>
+    <button onclick="render(100,Math.PI)">Annulus Sector</button>
+</div>
+
+</body>
+</html>

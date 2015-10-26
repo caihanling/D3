@@ -1,0 +1,286 @@
+<html>  
+  <head>  
+        <meta charset="utf-8">  
+        <title>中国地图</title>  
+  </head> 
+<style>
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+	var width  = 1000;
+	var height = 1000;
+	
+	var svg = d3.select("body").append("svg")
+	    .attr("width", width)
+	    .attr("height", height)
+	    .append("g")
+	    .attr("transform", "translate(0,0)");
+
+
+	var projection = d3.geo.mercator()
+						.center([107, 31])
+						.scale(850)
+    					.translate([width/2, height/2]);
+
+
+	//创建一个地理路径生成器
+	var path = d3.geo.path()
+					.projection(projection);  //设置投影
+	
+	
+	var color = d3.scale.category20();
+
+	//创建一个线段生成器
+	var linepath = d3.svg.line();
+
+	//定义颜色
+	var a = d3.rgb(0 , 255 , 255);  //浅蓝
+	var b = d3.rgb(0 , 0 , 255);   //蓝色
+
+/*
+	//添加标记：带有箭头的线段
+	var defs = svg.append("defs");
+
+	var arrowMarker = defs.append("marker")
+			.attr("id" , "arrow")
+			.attr("markerUnits" , "strokeWidth")  //标记大小的基准
+			.attr("markerWidth" , "12")  //标识大小
+			.attr("markerHeight" , "12")
+			.attr("viewBox" , "0 0 12 12")  //坐标系的区域
+			.attr("refX" , "6")  //在viewBox内的基准点，绘制时此点在直线端点上
+			.attr("refY" , "6")
+			.attr("orient" , "auto");  //绘制方向
+
+	var arrow_path = "M2,2 L10,6 L2,10 L6,6 L2,2";
+
+	arrowMarker.append("path")
+			.attr("d" , arrow_path)
+			.attr("fill" , "#000");
+
+	var startMarker = defs.append("marker")
+			.attr("id" , "startPoint")
+			.attr("markerUnits" , "strokeWidth")  //标记大小的基准
+			.attr("markerWidth" , "12")  //标识大小
+			.attr("markerHeight" , "12")
+			.attr("viewBox" , "0 0 12 12")  //坐标系的区域
+			.attr("refX" , "6")  //在viewBox内的基准点，绘制时此点在直线端点上
+			.attr("refY" , "6")
+			.attr("orient" , "auto");  //绘制方向
+
+	arrowMarker.append("circle")
+			.attr("cx" , 6)
+			.attr("cy" , 6)
+			.attr("r" , 2)
+			.attr("fill" , "#000");
+*/
+
+
+
+
+
+	d3.json("china.geojson", function(error, root) {
+		
+		if (error) 
+			return console.error(error);
+
+		console.log(root.features);
+		
+		var provinces = svg.selectAll("path")
+			.data( root.features )
+			.enter()
+			.append("path")
+			.attr("class" , "province")
+			.attr("stroke","#000")
+			.attr("stroke-width",1)
+			/*.attr("fill", function(d,i){
+				return color(i);
+			})*/
+
+
+			.attr("d", path );
+			/*.on("mouseover",function(d,i){
+                d3.select(this)
+                    .attr("fill","yellow");
+            })
+            .on("mouseout",function(d,i){
+                d3.select(this)
+                    .attr("fill",color(i));
+            })*/
+
+
+		/*	.on("click" , function(d) {
+					//计算面积，中心，边界框
+					var area = path.area(d);
+					var centroid = path.centroid(d);
+					var bounds = path.bounds(d);
+
+					//输出到控制台
+					console.log("省份 :" + d.properties.name);
+					console.log("面积 :" + area);
+					console.log("中心 :" + centroid);
+					console.log("边界框 :" + bounds);
+
+					//显示中心
+					svg.append("circle")
+							.attr("class", "centroid")
+							.attr("cx", centroid[0])
+							.attr("cy", centroid[1])
+							.attr("r", 1)
+							.transition()
+							.attr("r", 8)
+							.attr("fill" , "black");
+
+					//线段连接
+					//线段的点数据
+					var lines = [[639,332],[centroid[0],centroid[1]] ];
+
+					svg.append("path")
+							.attr("d" , linepath(lines))
+							.attr("stroke" , "black");
+
+					//显示边框
+					/!*svg.append("rect")
+							.attr("class", "boundingbox")
+							.attr("x", bounds[0][0])
+							.attr("y", bounds[0][1])
+							.attr("width", bounds[1][0] - bounds[0][0])
+							.attr("height", bounds[1][1] - bounds[0][1])
+							.attr("fill" , "none");*!/
+				});*/
+
+
+		d3.json("tourism.json" , function(error,valuedata){
+			//将数据读取到values数组里
+			var values = [];
+			for(var i=0 ; i< valuedata.provinces.length ; i++) {
+				var name = valuedata.provinces[i].name;
+				var value = valuedata.provinces[i].value;
+				values[name] = value;
+
+			}
+			console.log(values);
+
+			//求max和min
+			var maxvalue = d3.max(valuedata.provinces , function(d){
+				return d.value;
+			})
+			var minivalue = 0;
+
+			//定义线性比例尺
+			var linear = d3.scale.linear()
+					.domain([minivalue,maxvalue])
+					.range([0,1]);
+
+
+			//颜色插值函数
+			var computeColor = d3.interpolate(a , b);
+
+			//设定各省的填充颜色
+			provinces.style("fill" , function(d , i){
+
+				var t = linear( values[d.properties.name] );
+				var colorful = computeColor(t);
+				return colorful.toString();
+			})
+
+
+
+
+			//画所有点的中心
+			svg.selectAll("circle")
+					.data( root.features )
+					.enter()
+					.append("circle")
+					.attr("cx" , function (d) {
+						return  path.centroid(d)[0];
+					})
+					.attr("cy" , function (d) {
+						return  path.centroid(d)[1];
+					})
+					.attr("r" , 4)
+					.attr("fill" , "green");
+
+
+
+			//建立所有和北京的连线
+			svg.selectAll("path")
+					.data( root.features )
+					.enter()
+					.append("path")
+					.attr("d" , linepath( [[639,332],[0,0]] ) )
+					.attr("stroke" , "black");
+
+
+
+			//定义线性渐变
+			var defs = svg.append("defs");
+
+			var linearGradient = defs.append("linearGradient")
+					.attr("id" , "linearColor")
+					.attr("x1" , "0%")
+					.attr("y1" , "0%")
+					.attr("x2" , "100%")
+					.attr("y2" , "0");
+
+			var stop1 = linearGradient.append("stop")
+					.attr("offset" , "0%")
+					.style("stop-color" , a.toString());
+
+			var stop2 = linearGradient.append("stop")
+					.attr("offset" , "100%")
+					.style("stop-color" , b.toString());
+
+			//添加矩形
+			var colorRect = svg.append("rect")
+					.attr("x" , 20)
+					.attr("y" , 800)
+					.attr("width" , 140)
+					.attr("height" , 30)
+					.style("fill" , "url(#" + linearGradient.attr("id") + ")");
+
+			var miniValueText = svg.append("text")
+					.attr("class" , "valueText")
+					.attr("x" , 20)
+					.attr("y" , 800)
+					.attr("dy" , "-0.3em")
+					.text(function(){
+						return minivalue;
+					});
+
+			var maxValueText = svg.append("text")
+					.attr("class" , "valueText")
+					.attr("x" , 110)
+					.attr("y" , 800)
+					.attr("dy" , "-0.3em")
+					.text(maxvalue);
+
+
+	/*		//添加标线
+			var peking = projection([116.3, 39.9]);
+			var guilin = projection([110.3, 25.3]);
+
+			console.log(peking,guilin);
+
+			svg.append("line")
+					.attr("x1" , peking[0])
+					.attr("y1" , peking[1])
+					.attr("x2" , guilin[0])
+					.attr("y2" , guilin[1])
+					.attr("marker-start" , "url(#startPoint)")
+					.attr("marker-end" , "url(#arrow)");*/
+
+
+
+
+		});
+
+
+
+	});
+
+</script>
+	
+</body>  
+</html>  
