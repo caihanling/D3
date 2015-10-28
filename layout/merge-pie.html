@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+    var width = 500;
+    var height = 500;
+
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width" , width)
+            .attr("height" , height);
+
+
+    //1.确定初始数据
+    var dataset = [ ["小米",60.8] , ["三星",58.4] , ["联想",47.3] , ["苹果",46.6] ,
+        ["华为",41.3] , ["酷派",40.1] , ["其他",111.5] ];
+
+    //2.数据转化
+    var pie = d3.layout.pie()
+            .value(function(d) {return d[1]; });
+
+    var piedata = pie(dataset);
+
+    var fontsize = 14;
+
+    console.log(piedata);
+
+    //3.绘制
+    var outerRadius = width/4;
+    var innerRadius = 0;
+
+    //饼状图的圆心和半径
+    var piecircle = {
+        cx : width/2,
+        cy : height/2,
+        r : outerRadius
+    };
+
+    //创建弧生成器
+    var arc = d3.svg.arc()
+            .outerRadius(outerRadius)
+            .innerRadius(innerRadius);
+
+    var color = d3.scale.category20();
+
+
+    redraw();
+
+    function redraw () {
+        //获取update
+        var arcsUpdate = svg.selectAll(".arcGroup")
+                .data(piedata , function(d) {return d.data[0]; });
+
+        //获取enter部分
+        var arcsEnter = arcsUpdate.enter();
+
+        //获取exit部分
+        var arcsExit = arcsUpdate.exit();
+
+        //对update的处理方法，重新定义属性
+        arcsUpdate.call(setAttributes);
+
+        //对于enter的处理方法
+        var newArcs = arcsEnter.append("g")
+                .attr("class" , "arcGroup");
+
+        //添加弧
+        newArcs.append("path")
+                .attr("class" , "arcPath");
+
+        //添加弧内文字
+        newArcs.append("text")
+                .attr("class" , "percent");
+
+        //添加弧外文字
+        newArcs.append("text")
+                .attr("class" , "company");
+
+        //添加直线1
+        newArcs.append("line")
+                .attr("class" , "conLine1");
+
+        //添加直线2
+        newArcs.append("line")
+                .attr("class" , "conLine2");
+
+        //设定属性
+        newArcs.call(setAttributes);
+
+        //处理exit
+        arcsExit.remove();
+    }
+
+
+
+    //设置弧的属性
+    function setAttributes(arcs) {
+        /*为每一段弧添加3个数据
+        * circl：饼状图所在的圆，包含cx，cy，r
+        * dx：x方向偏移量
+        * dy：y方向偏移量*/
+        arcs.each(function (d) {
+            d.circle = piecircle;
+            d.dx = 0;
+            d.dy = 0;
+        });
+
+        arcs.attr("transform" , function(d) {
+            return "translate(" + d.circle.cx + "," + d.circle.cy + ")";
+        });
+
+        //绘制弧
+        arcs.select(".arcPath")
+                .attr("fill" , function(d,i) {
+                    return color(d.data[0]);
+                })
+                .attr("d" , function(d) {
+                    return arc(d);
+                });
+
+        //绘制弧内文字
+        arcs.select(".percent")
+                .attr("transform" , function(d) {
+                    var x = arc.centroid(d)[0] * 1.3;
+                    var y = arc.centroid(d)[1] * 1.3;
+                    return "translate(" + x + "," + y + ")";
+                })
+                .attr("text-anchor" , "middle")
+                .text(function(d) {
+                    var percent = Number(d.value) / d3.sum(dataset,function(d) {return d[1]; }) * 100;
+                    return percent.toFixed(1) + "%";
+                })
+
+        //弧外直线1
+        arcs.select(".conLine1")
+                .attr("stroke" , "black")
+                .attr("x1" , function(d) {return arc.centroid(d)[0] * 2; })
+                .attr("y1" , function(d) {return arc.centroid(d)[1] * 2; })
+                .attr("x2" , function(d) {return arc.centroid(d)[0] * 2.2; })
+                .attr("y2" , function(d) {return arc.centroid(d)[1] * 2.2; })
+
+        //弧外直线2
+        arcs.select(".conLine2")
+                .attr("stroke" , "black")
+                .each(function(d) {
+                    d.textLine = {x1:0 , y1:0 , x2:0 , y2:0};
+                })
+                .attr("x1" , function(d) {
+                    return d.textLine.x1 = arc.centroid(d)[0] * 2.2 ;
+                })
+                .attr("y1" , function(d) {
+                    return d.textLine.y1 = arc.centroid(d)[1] * 2.2 ;
+                })
+                .attr("x2" , function(d) {
+
+                    var strLen = getPixelLength(d.data[0],fontsize) * 1.5;
+                    var bx = arc.centroid(d)[0] * 2.2;
+                    d.textLine.x2 = bx < 0 ? bx-strLen : bx+strLen;
+                    return d.textLine.x2;
+                })
+                .attr("y2" , function(d) {
+                    return d.textLine.y2 = arc.centroid(d)[1] * 2.2 ;
+                });
+
+        //绘制弧外的文字
+        arcs.select(".company")
+                .attr("transform" , function(d) {
+                    var x = (d.textLine.x1 + d.textLine.x2)/2;
+                    var y = d.textLine.y1;
+                    y = y > 0 ? (y + fontsize*1.1) : (y - fontsize*0.4);
+                    return "translate(" + x + "," + y + ")";
+                })
+                .text(function(d) {
+                    return d.data[0];
+                })
+                .attr("font-size" , fontsize)
+                .attr("text-anchor" , "middle");
+
+        //定义拖拽行为
+        var drag = d3.behavior.drag()
+                .origin(null)
+                .on("drag" , dragmove)
+                .on("dragend" , dragend);
+
+        //drag被触发
+        function dragmove(d) {
+            d.dx += d3.event.dx;
+            d.dy += d3.event.dy;
+            d3.select(this)
+                    .attr("transform" , function(d) {
+                        return "translate(" + (d.dx + d.circle.cx) + "," + (d.dy + d.circle.cy) + ")";
+                    })
+        }
+
+        //拖拽结束后触发dragend
+        function dragend(d,i) {
+            //判断拖拽元素距圆心
+            var d1 = d.dx * d.dx + d.dy * d.dy;
+            var r1 = piecircle.r * piecircle.r;
+            if(d1 > r1) {
+                //移除元素
+                var moveData = dataset.splice(i,1);  //从数组中添加/删除项目,然后返回被删除的项目,从i下标开始，连续删除一个
+
+                piedata = pie(dataset);
+
+                console.log("piedata: " + piedata);
+
+                //添加一个圆，表示被删除的弧
+                appendCircle(moveData[0]);
+
+                redraw();
+            }
+
+        }
+
+        arcs.call(drag);
+
+
+    }
+
+    var circleGroup = svg.append("g");
+
+    //拖拽出去的元素的拖拽行为
+    var dragCircle = d3.behavior.drag()
+            .origin(null)
+            .on("drag" , dragCircleMove)
+            .on("dragend" , dragCircleEnd);
+
+    function dragCircleMove(d) {
+        d.x = d3.event.sourceEvent.offsetX;
+        d.y = d3.event.sourceEvent.offsetY;
+        d3.select(this)
+                .attr("transform" , "translate(" + d.x + "," + d.y + ")");
+    }
+
+    function dragCircleEnd (d,i) {
+        var d2 = (d.x - piecircle.cx) * (d.x - piecircle.cx) +  (d.y - piecircle.cy) * (d.y - piecircle.cy);
+        var r2 = piecircle.r * piecircle.r;
+
+        if (d2 < r2) {
+
+            dataset.push( [d[0],d[1]] );
+            piedata = pie(dataset);
+            d3.select(this).remove();
+            redraw();
+        }
+    }
+
+    function appendCircle(data) {
+
+        //为拖拽出来的图形增加新元素
+        gCircle = circleGroup.append("g")
+                .datum(data)
+                .attr("class","movedArc")
+                .attr("transform" , "translate(" + d3.event.sourceEvent.offsetX + "," + d3.event.sourceEvent.offsetY + ")")
+                .call(dragCircle);
+
+        console.log("gCircle: " + gCircle);
+
+
+
+        gCircle.append("circle")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", 20)
+                .style("fill",function(d){
+                    console.log("d:" + d);
+                    return color(d[0]);
+                });
+
+        gCircle.append("text")
+                .attr("dx" , "22px")
+                .attr("dy" , ".4em")
+                .text(function (d,i) {
+                    return d[0];
+                });
+
+
+    }
+
+
+
+
+    function getPixelLength(str,fontsize) {
+        var curLen = 0;
+        for(var i=0; i<str.length ; i++) {
+            var code = str.charCodeAt(i);  //返回指定位置的字符的 Unicode 编码
+            var pixelLen = code > 255 ? fontsize : fontsize/2 ;
+            curLen += pixelLen;
+        }
+        return curLen;
+    }
+
+
+
+</script>
+
+</body>
+</html>
