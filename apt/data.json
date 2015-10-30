@@ -1,11 +1,54 @@
-{"data":
-  [
-  {"startAngle": 0, "endAngle": 0.1},
-  {"startAngle": 0.1, "endAngle": 0.2 },
-  {"startAngle": 0.2, "endAngle": 0.4 },
-  {"startAngle": 0.4 ,"endAngle": 0.6},
-  {"startAngle": 0.6 ,"endAngle": 0.7},
-  {"startAngle": 0.7 ,"endAngle": 0.9},
-  {"startAngle": 0.9, "endAngle": 1}
-  ]
+{
+  "dataset":
+          [
+            {"name": "小米", "value": 60.8},
+            {"name": "三星", "value": 58.4},
+            {"name": "联想", "value": 47.3},
+            {"name": "苹果", "value": 46.6},
+            {"name": "华为", "value": 41.3},
+            {"name": "酷派", "value": 40.1},
+            {"name": "其他", "value": 111.5}
+
+
+
+          ],
+
+  "time":
+          [
+
+            {"count":"1" , "Time": "1445822859"},
+            {"count":"2" , "Time": "1445822863"},
+            {"count":"3" , "Time": "1445822860"},
+            {"count":"4" , "Time": "1445822864"},
+            {"count":"5" , "Time": "1445822868"},
+            {"count":"6" , "Time": "1445822862"},
+            {"count":"7" , "Time": "1445822865"},
+            {"count":"8" , "Time": "1445822863"},
+            {"count":"9" , "Time": "1445822859"},
+            {"count":"1" , "Time": "1445822862"},
+
+            {"count":"23" , "Time": "1445822872"},
+            {"count":"3" , "Time": "1445822864"},
+            {"count":"4" , "Time": "1445822859"},
+            {"count":"5" , "Time": "1445822873"},
+            {"count":"6" , "Time": "1445822860"},
+            {"count":"7" , "Time": "1445822864"},
+            {"count":"8" , "Time": "1445822863"},
+            {"count":"9" , "Time": "1445822859"},
+            {"count":"1" , "Time": "1445822865"},
+            {"count":"2" , "Time": "1445822862"},
+
+            {"count":"3" , "Time": "1445822872"},
+            {"count":"4" , "Time": "1445822859"},
+            {"count":"5" , "Time": "1445822862"},
+            {"count":"6" , "Time": "1445822873"},
+            {"count":"7" , "Time": "1445822863"},
+            {"count":"7" , "Time": "1445822874"},
+            {"count":"8" , "Time": "1445822859"},
+            {"count":"9" , "Time": "1445822860"},
+            {"count":"4" , "Time": "1445822874"},
+            {"count":"7" , "Time": "1445822868"}
+
+          ]
 }
+

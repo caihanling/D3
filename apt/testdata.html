@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    d3.json("data.json", function(error, dataset){
+        if(error)
+            console.error(error);
+
+
+
+        var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+        var parseDate2 = d3.time.format("%d-%b-%y").parse;
+        var time = getLocalTime("1293072805");
+        console.log(time);
+        console.log(parseDate(time));
+
+        console.log(dataset);
+    })
+
+
+
+    function getLocalTime(nS) {
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+    }
+
+
+
+
+</script>
+
+</body>
+</html>
