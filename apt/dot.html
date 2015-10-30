@@ -30,10 +30,7 @@
             console.error(error);
 
 
-        var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
-        var parseDate2 = d3.time.format("%d-%b-%y").parse;
-        var time = getLocalTime(1293072805);
-        console.log(parseDate("2013-03-12 15:09:04"));
+
 
         /*   //圆心数据
            var center = [[0.5, 0.5], [0.7, 0.8], [0.4, 0.9], [0.11, 0.32], [0.88, 0.25],
@@ -42,8 +39,12 @@
         var center = data.time;
         console.log(center);
 
-        var width = 500;	//SVG绘制区域的宽度
-        var height = 500;	//SVG绘制区域的高度
+        var parseDate = d3.time.format("%m/%d/%Y, %H:%M:%S %p").parse;
+
+
+
+        var width = 700;	//SVG绘制区域的宽度
+        var height = 700;	//SVG绘制区域的高度
 
         var svg = d3.select("body")			//选择<body>
                 .append("svg")			//在<body>中添加<svg>
@@ -58,9 +59,13 @@
 
         //x轴比例尺
         var xScale = d3.time.scale()
-                .domain([d3.min(data, function(d) { return d.Time; }), d3.max(data, function(d) { return d.Time; })])
+                .domain([d3.min(center, function(d) {
+                    console.log(parseDate(getLocalTime(d.Time)));
+                    return parseDate(getLocalTime(d.Time)); }), d3.max(center, function(d) { return parseDate(getLocalTime(d.Time)); })])
                 .range([0, xAxisWidth]);
 
+       /* var xScale = d3.time.scale().range([0, xAxisWidth]);
+*/
         //y轴比例尺
         var yScale = d3.scale.linear()
                 .domain([0, 1.2 * d3.max(center, function (d) {
@@ -69,7 +74,7 @@
                 .range([0, yAxisWidth]);
 
         //外边框
-        var padding = {top: 30, right: 30, bottom: 30, left: 50};
+        var padding = {top: 30, right: 30, bottom: 30, left: 200};
 
         //绘制圆
         var cirlce = svg.selectAll("circle")
@@ -78,10 +83,10 @@
                 .append("circle")	//添加circle元素，使其与绑定数组的长度一致
                 .attr("fill", "black")		//设置颜色为black
                 .attr("cx", function (d) {		//设置圆心的x坐标
-                    return padding.left + xScale(d[0]);
+                    return padding.left + xScale(parseDate(getLocalTime(d.Time)));
                 })
                 .attr("cy", function (d) {		//设置圆心的y坐标
-                    return height - padding.bottom - yScale(d[1]);
+                    return height - padding.bottom - yScale(d.count);
                 })
                 .attr("r", 5);
 
@@ -112,8 +117,10 @@
 
 
     function getLocalTime(nS) {
-        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/年|月/g, "-").replace(/日/g, " ");
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
     }
+
+
 
 </script>
 

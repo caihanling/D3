@@ -7,29 +7,69 @@
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
-    d3.json("data.json", function(error, dataset){
-        if(error)
+    d3.json("data.json", function(error, dataset) {
+        if (error)
             console.error(error);
 
+/*
 
 
-        var parseDate = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
-        var parseDate2 = d3.time.format("%d-%b-%y").parse;
-        var time = getLocalTime("1293072805");
-        console.log(time);
-        console.log(parseDate(time));
+        // 将当前时间换成时间格式字符串
+        var timestamp3 = 1403058804;
+        var newDate = new Date();
+        newDate.setTime(timestamp3 * 1000);
+        // Wed Jun 18 2014
+        console.log(newDate.toDateString());
+        // Wed, 18 Jun 2014 02:33:24 GMT
+        console.log(newDate.toGMTString());
+        // 2014-06-18T02:33:24.000Z
+
+        var t = newDate.toISOString();
+
+        console.log(newDate.toISOString());
+        // 2014-06-18T02:33:24.000Z
+        console.log(newDate.toJSON());
+        // 2014年6月18日
+        console.log(newDate.toLocaleDateString());
+        // 2014年6月18日 上午10:33:24
+        console.log(newDate.toLocaleString());
+        // 上午10:33:24
+        console.log(newDate.toLocaleTimeString());
+        // Wed Jun 18 2014 10:33:24 GMT+0800 (中国标准时间)
+        console.log(newDate.toString());
+        // 10:33:24 GMT+0800 (中国标准时间)
+        console.log(newDate.toTimeString());
+        // Wed, 18 Jun 2014 02:33:24 GMT
+        console.log(newDate.toUTCString());
+
+
+
+
+
+
+        var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%S.000Z").parse;
+        var parseDate2 = d3.time.format("%m/%d/%Y, %H:%S:").parse;
+        console.log(parseDate(t));
+
+        var t2 = getLocalTime(timestamp3);
+        console.log(t2);
+        console.log(parseDate2(t2));
 
         console.log(dataset);
+
+
+        function getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().substr(0,17)}*/
+
+
+        function getLocalTime(nS) {
+            return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+        }
+        alert(getLocalTime(1293072805));
+
+
+
     })
-
-
-
-    function getLocalTime(nS) {
-        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
-    }
-
-
-
 
 </script>
 
