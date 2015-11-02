@@ -25,7 +25,7 @@
 
 
 
-    d3.json("data.json", function(error, data) {
+    d3.json("../data/data.json", function(error, data) {
         if (error)
             console.error(error);
 
@@ -95,7 +95,7 @@
         var yAxis = d3.svg.axis()
                 .scale(yScale)
                 .orient("left")
-                .ticks(5);
+                .ticks(10);
 
         svg.append("g")
                 .attr("class", "axis")
