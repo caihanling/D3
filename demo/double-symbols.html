@@ -31,7 +31,7 @@
         var color = d3.scale.category20c();
 
         symbolTypes = d3.scale.ordinal() // <-A
-                .domain([1,2,3,4,5])
+                .domain([1,2,3,4,5,6])
                 .range(["circle","cross", "diamond","square","triangle-down","triangle-up"]);
 
         //外边框
@@ -111,7 +111,8 @@
         //创建符号生成器
         var symbol = d3.svg.symbol()
                 .size(70)
-                .type(symbolTypes(2));
+                .type(symbolTypes(6));
+
 
 
         var renderSymbols = svg.selectAll("symbol")
@@ -120,12 +121,26 @@
                 .append("path")
                 .attr("d" , function(d) {return symbol(d);})
                 .style("stroke" , "none")
-                .style("fill", function(d,i) {return color(i)})
                 .attr("transform" , function(d) {
                     var x = padding.left + xScale(parseDate(getLocalTime(d.Time)));
                     var y = padding.bottom + yScale(d.count);
                     return "translate(" + x + "," + y + ")";
                 });
+
+
+        renderSymbols
+                .filter(function(d) {
+                    return d.sex > 0;  //male
+                })
+                .attr("d" , d3.svg.symbol().type("circle"))
+                .style("fill", "#60B9F4");
+
+
+        renderSymbols
+                .filter(function(d) {
+                    return d.sex < 1;  //female
+                })
+                .style("fill", "#FA9A5B");
 
 
 
