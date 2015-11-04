@@ -3,36 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
 
-    <style>
-
-        .tooltip{
-            position: absolute;
-            width: 120px;
-            height: auto;
-            text-align: center;
-            font-family: simsun;
-            font-size: 14px;
-            color: black;
-            background-color: white;
-            border-width: 2px solid white;
-            border-radius: 5px;
-        }
-
-       /* .tooltip:after {
-            content: '';
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            margin-left: -18px;
-            width: 0;
-            height: 0;
-            border-bottom: 12px solid white;
-            border-right: 12px solid transparent;
-            border-left: 12px solid transparent;
-        }
-*/
-    </style>
 
 </head>
 <body>
@@ -171,7 +143,7 @@
             /*
              鼠标移入时，
              （1）通过 selection.html() 来更改提示框的文字
-             （2）通过更改样式 left 和 top 来设定提示框的位置
+             （2）通过更改样式 left 和 top 来设定提示框的位置,d3.event.pageX是鼠标相当于浏览器页面的坐标
              （3）设定提示框的透明度为1.0（完全不透明）
              */
 
@@ -182,19 +154,19 @@
 
             // color(i) 为被选择图形的颜色
             tooltip.style("border" , "2px solid " + color(i));
-        })
-                .on("mousemove",function(d){
-                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+            })
+            .on("mousemove",function(d){
+                /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
 
-                    tooltip.style("left", (d3.event.pageX) + "px")
-                            .style("top", (d3.event.pageY + 20) + "px");
+                tooltip.style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY + 20) + "px");
 
-                })
-                .on("mouseout",function(d){
-                    /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
+            })
+            .on("mouseout",function(d){
+                /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
 
-                    tooltip.style("opacity",0.0);
-                })
+                tooltip.style("opacity",0.0);
+            })
 
 
 

@@ -1,3 +1,7 @@
+body{
+    /*background-color: #bce8f1;*/
+}
+
 .axis path, .axis line {
     fill: none;
     stroke: #000;
@@ -23,4 +27,37 @@
     stroke: none;
     fill: blue;
     fill-opacity: .7;
+}
+
+.tooltip{
+    position: absolute;
+    width: 120px;
+    height: auto;
+    text-align: center;
+    font-family: simsun;
+    font-size: 14px;
+    color: black;
+    background-color: white;
+    border-width: 2px solid white;
+    border-radius: 5px;
+}
+.tooltip .title{
+    border-bottom: 1px solid #000000;
+    margin-top: 2px;
+    text-align: center;
+}
+.tooltip .desColor {
+    width: 10px;
+    height: 10px;
+    float: left;
+    margin: 2px 8px 2px 8px;
+}
+.tooltip .desTest {
+    /*display: inline;*/
+    float: left;
+    margin: 9px 8px 2px 8px;
+}
+.tooltip .des {
+    margin-top: 3px;
+
 }

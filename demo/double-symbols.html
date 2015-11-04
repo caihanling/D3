@@ -5,6 +5,37 @@
     <title>Axis Grid Lines</title>
     <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <style>
+        /*.tooltip{
+            position: absolute;
+            width: 120px;
+            height: auto;
+            text-align: center;
+            font-family: simsun;
+            font-size: 14px;
+            color: black;
+            background-color: white;
+            border-width: 2px solid white;
+            border-radius: 5px;
+        }
+        .tooltip .title{
+            border-bottom: 1px solid #000000;
+            margin-top: 2px;
+            text-align: center;
+        }
+        .tooltip .desColor {
+            width: 10px;
+            height: 10px;
+            float: left;
+            margin: 9px 8px 2px 8px;
+        }
+        .tooltip .desTest {
+            display: inline;
+        }
+        .tooltip .des {
+            margin-top: 3px;
+        }*/
+    </style>
 </head>
 
 <body>
@@ -141,6 +172,90 @@
                     return d.sex < 1;  //female
                 })
                 .style("fill", "#FA9A5B");
+
+
+
+
+        //添加一个提示框
+        var tooltip = d3.select("body")
+                .append("div")
+                .attr("class","tooltip")
+                .style("opacity",0.0);
+
+        renderSymbols.on("mouseover" , function(d,i) {
+            tooltip.html("<span style='font-size: larger;font-weight: 500'>数量:</span>" + d.count + "<br>时间:" + getLocalTime(d.Time) )
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY + 20) + "px")
+                    .style("opacity",1.0);
+
+            tooltip.filter(function() {
+                return d.sex > 0;
+            })
+                    .style("border" , "2px solid " + "#60B9F4");
+
+            tooltip.filter(function() {
+                return d.sex < 1;
+            })
+                    .style("border" , "2px solid " + "#FA9A5B");
+
+
+        })
+                .on("mousemove",function(d){
+                    /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                    tooltip.style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+
+                })
+                .on("mouseout",function(d){
+                    /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
+
+                    tooltip.style("opacity",0.0);
+                });
+
+
+
+
+        var tooltipStatic = d3.select("body")
+                .append("div")
+                .attr("class","tooltip")
+                .style("left", "800px")
+                .style("top", "400px")
+                .style("opacity",1.0)
+                .style("border" , "2px solid " + "#777777");
+
+
+        var title = tooltipStatic.append("div")
+                .attr("class" , "title")
+                .html("散点图颜色标识");
+
+
+        var des1 = tooltipStatic
+                        .append("div")
+                        .attr("class" , "des");
+
+        var desColor1 = des1.append("div")
+                .attr("class" , "desColor")
+                .style("background-color","#60B9F4");
+
+        var desTest1 = des1.append("div")
+                .attr("class" , "desText")
+                .html("male");
+
+
+        var des2 = tooltipStatic
+                .append("div")
+                .attr("class" , "des");
+
+        var desColor2 = des2.append("div")
+                .attr("class" , "desColor")
+                .style("background-color","#FA9A5B");
+
+        var desTest2 = des2.append("div")
+                .attr("class" , "desText")
+                .html("female");
+
+
 
 
 
