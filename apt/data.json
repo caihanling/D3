@@ -49,6 +49,60 @@
             {"count":4 , "Time": "1445822874"},
             {"count":7 , "Time": "1445822898"}
 
+          ],
+
+  "ip":
+  [
+    {"Destination_ip" : "236003116" , "count" : 3},
+    {"Destination_ip" : "236005805" , "count" : 3},
+    {"Destination_ip" : "236005945" , "count" : 5},
+    {"Destination_ip" : "236006172" , "count" : 1},
+    {"Destination_ip" : "987235859" , "count" : 7},
+    {"Destination_ip" : "1017612811" , "count" : 2},
+    {"Destination_ip" : "1017612812" , "count" : 5},
+    {"Destination_ip" : "1709336406" , "count" : 3},
+    {"Destination_ip" : "1709336426" , "count" : 30},
+    {"Destination_ip" : "1709412128" , "count" : 13},
+
+    {"Destination_ip" : "1728520093" , "count" : 7},
+    {"Destination_ip" : "1945096718" , "count" : 20},
+    {"Destination_ip" : "2073496236" , "count" : 9},
+    {"Destination_ip" : "3029927988" , "count" : 5},
+    {"Destination_ip" : "3062671148" , "count" : 8},
+    {"Destination_ip" : "3062675258" , "count" : 12},
+    {"Destination_ip" : "3073978429" , "count" : 5}
+  ],
+
+  "rule":
+  [
+    {"ruleAction" : "过滤" , "count": 200},
+    {"ruleAction" : "规则动作2" , "count": 350},
+    {"ruleAction" : "规则动作3" , "count": 500},
+    {"ruleAction" : "规则动作4" , "count": 700},
+    {"ruleAction" : "规则动作5" , "count": 350}
+  ],
+
+  "ip_rule":
+          [
+            {"ip":"236003116","freq":{"rule1":4786, "rule2":1319, "rule3":249, "rule4":600}},
+            {"ip":"236005805","freq":{"rule1":2058, "rule2":786, "rule3":453, "rule4":4653}},
+            {"ip":"236005945","freq":{"rule1":786, "rule2":35, "rule3":766, "rule4":45}},
+            {"ip":"236006172","freq":{"rule1":89, "rule2":453, "rule3":7, "rule4":398}},
+            {"ip":"987235859","freq":{"rule1":988, "rule2":1319, "rule3":4156, "rule4":83}},
+            {"ip":"1017612811","freq":{"rule1":86, "rule2":89, "rule3":36, "rule4":378}},
+            {"ip":"1017612812","freq":{"rule1":698, "rule2":69, "rule3":249, "rule4":600}},
+            {"ip":"1709336406","freq":{"rule1":7489, "rule2":9878, "rule3":36, "rule4":73}},
+            {"ip":"1709336426","freq":{"rule1":46, "rule2":89, "rule3":5, "rule4":356}},
+            {"ip":"1709412128","freq":{"rule1":4786, "rule2":789, "rule3":89, "rule4":786}},
+
+            {"ip":"1728520093","freq":{"rule1":89, "rule2":78, "rule3":398, "rule4":98}},
+            {"ip":"1945096718","freq":{"rule1":384, "rule2":3, "rule3":45, "rule4":78}},
+            {"ip":"2073496236","freq":{"rule1":789, "rule2":789, "rule3":369, "rule4":600}},
+            {"ip":"3029927988","freq":{"rule1":46, "rule2":698, "rule3":489, "rule4":763}},
+            {"ip":"3062671148","freq":{"rule1":564, "rule2":7489, "rule3":3698, "rule4":789}},
+            {"ip":"3062675258","freq":{"rule1":7963, "rule2":4669, "rule3":6, "rule4":458}},
+            {"ip":"3073978429","freq":{"rule1":41156, "rule2":45, "rule3":8453, "rule4":5}}
+
           ]
 }
 

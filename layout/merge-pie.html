@@ -63,6 +63,8 @@
         //获取exit部分
         var arcsExit = arcsUpdate.exit();
 
+       /* console.log("arcsExit" + arcsExit);*/
+
         //对update的处理方法，重新定义属性
         arcsUpdate.call(setAttributes);
 
@@ -188,6 +190,9 @@
                 .on("drag" , dragmove)
                 .on("dragend" , dragend);
 
+
+
+
         //drag被触发
         function dragmove(d) {
             d.dx += d3.event.dx;
@@ -197,6 +202,9 @@
                         return "translate(" + (d.dx + d.circle.cx) + "," + (d.dy + d.circle.cy) + ")";
                     })
         }
+
+
+
 
         //拖拽结束后触发dragend
         function dragend(d,i) {

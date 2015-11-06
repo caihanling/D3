@@ -78,6 +78,14 @@
             {"count":40 , "Time": "1445822774" , "sex": 0},
             {"count":70 , "Time": "1445822798" , "sex": 0}
 
+          ],
+  "rule":
+          [
+            {"ruleAction" : "过滤" , "count": 200},
+            {"ruleAction" : "规则动作2" , "count": 350},
+            {"ruleAction" : "规则动作3" , "count": 500},
+            {"ruleAction" : "规则动作4" , "count": 700},
+            {"ruleAction" : "规则动作5" , "count": 350}
           ]
 }
 

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
+
+
+</head>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+    var width = 500;
+    var height = 500;
+
+    var svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+    var bardata;
+
+
+    //1.确定初始数据
+
+    d3.json("data.json", function (error, data) {
+        if (error)
+            console.error(error);
+
+        var dataset = data.ip_rule;
+
+        dataset.forEach(function (d) {
+            d.total = d.freq.rule1 + d.freq.rule2 + d.freq.rule3 + d.freq.rule4;
+        })
+
+        console.log(dataset);
+
+
+        drawpie();
+
+        function drawpie() {
+
+            //2.数据转化
+            var pie = d3.layout.pie()  //创建饼状图布局
+                /*  .startAngle(Math.PI * 0.2)  //在0~2π的范围内控制圆
+                 .endAngle(Math.PI * 1.5)*/
+                    .value(function (d) {
+                        return d.total;
+                    });
+
+            //值访问器
+
+            var piedata =pie(dataset);
+
+            console.log(piedata);
+
+            //3.绘制
+            var outerRadius = width / 3
+
+                    ;
+            var innerRadius = 0;
+            //创建弧生成器
+            var arc = d3.svg.arc()
+                    .outerRadius( outerRadius)
+                    .innerRadius(innerRadius);
+
+            var color = d3.scale.
+                    category20c();
+
+            //添加对应数目的弧组
+            var arcs = svg.selectAll("g" )
+                    .data(piedata)
+                    .enter()
+                    .append("g")
+                    .attr( "transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            //添加弧的路径元素
+            arcs.append("path")
+                    .
+                    attr("fill", function (d, i) {
+                        return color(i);
+                    })
+                    .attr("d",function (d) {
+                        return arc
+                        (d);  //使用弧生成器
+                    })
+                    .on("mouseover", function (d) {
+                        d3.select(this)
+                                .attr("transform",
+                                function (d) {
+                                    var x = arc.centroid(d)[ 0] * 0.3;
+                                    var y = arc.centroid(d)[1] * 0.3;
+                                    return "translate(" + x + "," + y + ")";
+                                })
+                    })
+                    .on(
+                    "mouseout",
+                    function (d, i) {
+                        d3.select(this)
+                            /* .transition()
+                             .duration(300)*/
+                                .attr("fill", color(i))
+                                .attr("transform", function (d) {
+                                    return "translate(0,0)";
+                                })
+                    });
+            /*   //添加文字
+             arcs.append("text")
+             .attr("transform", function (d) {
+             var x = arc.centroid(d)[0] * 1.3;  //计算弧的中心坐标
+             var y = arc.centroid(d)[1] * 1.3;
+             return "translate(" + x + "," + y + ")";
+             })
+             .attr("text-anchor", "middle")
+             .text(function (d) {
+             var percent = d.value / d3.sum(dataset, function (d) {
+             return d.value;
+             }) * 100;
+             return percent.toFixed(1) + "%";
+             });
+             */
+            /*     //添加弧上的直线
+             arcs.append("line")
+             .attr("stroke", "black")
+             .attr("x1", function (d) {
+             return arc.centroid(d)[0] * 2
+             })
+             .attr("y1", function (d) {
+             return arc.centroid(d)[1] * 2
+             })
+             .attr("x2", function (d) {
+             return arc.centroid(d)[0] * 2.2
+             })
+             .attr("y2", function (d) {
+             return arc.centroid(d)[1] * 2.2
+             });
+
+             //在弧外添加文字
+             arcs.append("text")
+             .attr("transform", function (d) {
+             var x = arc.centroid(d)[0] * 2.5;
+             var y = arc.centroid(d)[1] * 2.5;
+             return "translate(" + x + "," + y + ")";
+             })
+             .attr("text-anchor", "middle")
+             .text(function (d) {
+             return d.data.name;
+             });
+             */
+
+            //添加一个提示框
+            var tooltip = d3.select("body")
+                    .append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0.0);
+
+            arcs.on("mouseover", function (d, i) {/*
+             鼠标移入时，
+             （1）通过 selection.html() 来更改提示框的文字
+             （2）通过更改样式 left 和 top 来设定提示框的位置,d3.event.pageX是鼠标相当于浏览器页面的坐标
+             （3）设定提示框的透明度为1.0（完全不透明）
+             */
+
+                tooltip.html("目标IP:" + d.data.ip + "<br />过滤次数为:" + d.data.total)
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY + 20) + "px")
+                        .style("opacity", 1.0);
+
+
+                drawbar(d);
+
+                // color(i) 为被选择图形的颜色
+                tooltip.style("border", "2px solid " + color(i));
+            })
+                    .on("mousemove", function (d) {
+                        /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                        tooltip.style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY + 20) + "px");
+
+                    })
+                    .on("mouseout", function (d) {
+                        /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
+                        tooltip.style("opacity", 0.0);
+                        rectupdate.exit().remove();
+                    })
+        }
+
+
+
+
+
+        var barwidth = 400;	//SVG绘制区域的宽度
+        var barheight = 400;	//SVG绘制区域的高度
+
+
+        //x轴宽度
+        var xAxisWidth = 300;
+
+        //y轴宽度
+        var yAxisWidth = 300;
+
+
+        //外边框
+        var padding = {top: 30, right: 30, bottom: 30, left: 50};
+
+        var barsvg = d3.select("body")			//选择<body>
+                .append("svg")			//在<body>中添加<svg>
+                .attr("width", barwidth)	//设定<svg>的宽度属性
+                .attr("height", barheight);//设定<svg>的高度属性
+
+        var rect,rectupdate;
+
+
+        function drawbar(bardata) {
+
+
+
+
+
+
+
+
+
+
+            color = d3.scale.category20();
+
+
+
+
+            var bdata = [bardata.data.freq.rule1 , bardata.data.freq.rule2 , bardata.data.freq.rule3 , bardata.data.freq.rule4];
+
+            console.log(bdata);
+
+            //x轴比例尺
+            var xScale = d3.scale.ordinal()
+                    .domain(d3.range(bdata.length))
+                    .rangeRoundBands([0, xAxisWidth], 0.2);
+
+            //y轴比例尺
+            var yScale = d3.scale.linear()
+                    .domain([0, d3.max(bdata , function(d) {
+                        return d;
+                    })])
+                    .range([0, yAxisWidth]);
+
+
+            rectupdate = barsvg.selectAll("rect")
+                    .data(bdata);
+
+
+            rect = 	rectupdate.enter()			//获取enter部分
+                    .append("rect")	//添加rect元素，使其与绑定数组的长度一致
+                    .attr("fill", function(d,i) {
+                        return color(i);
+                    })
+                    .attr("x", function (d, i) {		//设置矩形的x坐标
+                        console.log(d);
+
+                        return padding.left + xScale(i);
+                    })
+                    .attr("y", function (d) {		//设置矩形的y坐标
+                        return barheight - padding.bottom - yScale(d);
+                    })
+                    .attr("width", xScale.rangeBand())		//设置矩形的宽度
+                    .attr("height", function (d) {	//设置矩形的高度
+
+                        return yScale(d);
+                    });
+
+            var test = rectupdate.enter()
+                    .append("rect");
+
+            console.log(test,rect);
+
+            var text = barsvg.selectAll("text")
+                    .data(bdata)			//绑定数据
+                    .enter()				//获取enter部分
+                    .append("text")			//添加text元素，使其与绑定数组的长度一致
+                    .attr("fill", "white")
+                    .attr("font-size", "14px")
+                    .attr("text-anchor", "middle")
+                    .attr("x", function (d, i) {
+                        return padding.left + xScale(i);
+                    })
+                    .attr("y", function (d) {
+                        return barheight - padding.bottom - yScale(d);
+                    })
+                    .attr("dx", xScale.rangeBand() / 2)
+                    .attr("dy", "1em")
+                    .text(function (d) {
+                        return d;
+                    });
+
+            var xAxis = d3.svg.axis()
+                    .scale(xScale)
+                    .orient("bottom");
+
+            yScale.range([yAxisWidth, 0]);
+
+            var yAxis = d3.svg.axis()
+                    .scale(yScale)
+                    .orient("left");
+
+            barsvg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(" + padding.left + "," + (barheight - padding.bottom) + ")")
+                    .call(xAxis);
+
+            barsvg.append("g")
+                    .attr("class", "axis")
+                    .attr("transform", "translate(" + padding.left + "," + (barheight - padding.bottom - yAxisWidth) + ")")
+                    .call(yAxis);
+
+        }
+
+
+    });
+
+
+</script>
+
+</body>
+</html>

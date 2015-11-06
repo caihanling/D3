@@ -21,7 +21,7 @@
 
 	var projection = d3.geo.mercator()
 						.center([107, 31])
-						.scale(850)
+						.scale(500)
     					.translate([width/2, height/2]);
 
 
@@ -37,7 +37,7 @@
 
 	//定义颜色
 	var a = d3.rgb(0 , 255 , 255);  //浅蓝
-	var b = d3.rgb(0 , 0 , 255);   //蓝色
+	var b = d3.rgb(0 , 130 , 255);   //蓝色
 
 /*
 	//添加标记：带有箭头的线段
@@ -187,7 +187,7 @@
 
 
 
-
+/*
 			//画所有点的中心
 			svg.selectAll("circle")
 					.data( root.features )
@@ -200,7 +200,7 @@
 						return  path.centroid(d)[1];
 					})
 					.attr("r" , 4)
-					.attr("fill" , "green");
+					.attr("fill" , "green");*/
 
 
 
@@ -235,7 +235,7 @@
 			//添加矩形
 			var colorRect = svg.append("rect")
 					.attr("x" , 20)
-					.attr("y" , 800)
+					.attr("y" , 600)
 					.attr("width" , 140)
 					.attr("height" , 30)
 					.style("fill" , "url(#" + linearGradient.attr("id") + ")");
@@ -243,7 +243,7 @@
 			var miniValueText = svg.append("text")
 					.attr("class" , "valueText")
 					.attr("x" , 20)
-					.attr("y" , 800)
+					.attr("y" , 600)
 					.attr("dy" , "-0.3em")
 					.text(function(){
 						return minivalue;
@@ -252,7 +252,7 @@
 			var maxValueText = svg.append("text")
 					.attr("class" , "valueText")
 					.attr("x" , 110)
-					.attr("y" , 800)
+					.attr("y" , 600)
 					.attr("dy" , "-0.3em")
 					.text(maxvalue);
 

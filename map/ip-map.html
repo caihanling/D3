@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/styles.css"/>
 </head>
 <body>
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -70,8 +71,8 @@
             }
 
             //定义最大值和最小值的颜色
-            var a = d3.rgb(0,0,255);
-            var b = d3.rgb(0,100,255);
+            var a = d3.rgb(0,255,255);
+            var b = d3.rgb(0,150,255);
 
             //颜色插值函数
             var computeColor = d3.interpolate(a,b);
@@ -92,11 +93,61 @@
                         return color.toString();
                     })
                     .attr("filter" , "url(#" + gaussian.attr("id") + ")")
-                    .on("mousemove" , function(d) {
-                        console.log(d);
+                    .on("mouseover" , function(d) {
+                        d3.select(this)
+                                .attr("fill" , "white");
+                    })
+                    .on("mouseout" , function(d){
+                        d3.select(this)
+                                .attr("fill" , function() {
+                                    var color = computeColor(Math.random());
+                                    return color.toString();
+                                })
                     });
 
-            setInterval(getcolor , 2500);
+          /*  setInterval(getcolor , 2500);*/
+
+
+
+
+
+
+            //添加一个提示框
+            var tooltip = d3.select("body")
+                    .append("div")
+                    .attr("class","tooltip")
+                    .style("opacity",0.0);
+
+            points.on("mouseover",function(d,i){
+
+                tooltip.html(d.name + "<br />" +"ip为" + d.log + "<br/>" + "访问方式:http")
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY + 20) + "px")
+                        .style("background-color" , "#EDEEEF")
+                        .style("opacity",0.8);
+
+                // color(i) 为被选择图形的颜色
+                /*tooltip.style("border" , "2px solid " + color(i));*/
+            })
+                    .on("mousemove",function(d){
+                        /* 鼠标移动时，更改样式 left 和 top 来改变提示框的位置 */
+
+                        tooltip.style("left", (d3.event.pageX) + "px")
+                                .style("top", (d3.event.pageY + 20) + "px");
+
+                    })
+                    .on("mouseout",function(d){
+                        /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
+
+                        tooltip.style("opacity",0.0);
+                    })
+
+
+
+
+
+
+
 
             function getcolor () {
                points.attr("r" , 3)
