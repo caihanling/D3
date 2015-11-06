@@ -183,7 +183,7 @@
                     .on("mouseout", function (d) {
                         /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
                         tooltip.style("opacity", 0.0);
-                        rectupdate.exit().remove();
+                        rectexit.remove();
                     })
         }
 
@@ -210,7 +210,7 @@
                 .attr("width", barwidth)	//设定<svg>的宽度属性
                 .attr("height", barheight);//设定<svg>的高度属性
 
-        var rect,rectupdate;
+        var rect,rectupdate,rectexit;
 
 
         function drawbar(bardata) {
@@ -269,10 +269,9 @@
                         return yScale(d);
                     });
 
-            var test = rectupdate.enter()
-                    .append("rect");
+            rectexit = rectupdate.exit();
 
-            console.log(test,rect);
+            console.log(rect,rectexit);
 
             var text = barsvg.selectAll("text")
                     .data(bdata)			//绑定数据
