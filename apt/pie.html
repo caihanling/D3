@@ -8,18 +8,24 @@
 
 </head>
 <body>
+
+
+<div id="pie" style="float: left"></div>
+<div id="bar" style="float: left"></div>
+<div id="tooltip" style="float: left"></div>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 
     var width = 500;
     var height = 500;
 
-    var svg = d3.select("body")
+    var svg = d3.select("#pie")
             .append("svg")
             .attr("width", width)
             .attr("height", height);
 
-    var bardata;
+    var bardata,rule1=0,rule2=0,rule3=0,rule4=0;
 
 
     //1.确定初始数据
@@ -32,6 +38,11 @@
 
         dataset.forEach(function (d) {
             d.total = d.freq.rule1 + d.freq.rule2 + d.freq.rule3 + d.freq.rule4;
+            rule1 += d.freq.rule1;
+            rule2 += d.freq.rule2;
+            rule3 += d.freq.rule3;
+            rule4 += d.freq.rule4;
+
         })
 
         console.log(dataset);
@@ -44,25 +55,21 @@
             //2.数据转化
             var pie = d3.layout.pie()  //创建饼状图布局
                 /*  .startAngle(Math.PI * 0.2)  //在0~2π的范围内控制圆
-                 .endAngle(Math.PI * 1.5)*/
+                  .endAngle(Math.PI * 1.5)*/
                     .value(function (d) {
                         return d.total;
                     });
 
             //值访问器
-
-            var piedata =pie(dataset);
-
-            console.log(piedata);
+            var piedata = pie(dataset);
 
             //3.绘制
-            var outerRadius = width / 3
-
-                    ;
+            var outerRadius = width / 3;
             var innerRadius = 0;
+
             //创建弧生成器
             var arc = d3.svg.arc()
-                    .outerRadius( outerRadius)
+                    .outerRadius(outerRadius)
                     .innerRadius(innerRadius);
 
             var color = d3.scale.
@@ -77,77 +84,28 @@
 
             //添加弧的路径元素
             arcs.append("path")
-                    .
-                    attr("fill", function (d, i) {
+                    .attr("fill", function (d, i) {
                         return color(i);
                     })
                     .attr("d",function (d) {
-                        return arc
-                        (d);  //使用弧生成器
+                        return arc(d);  //使用弧生成器
                     })
                     .on("mouseover", function (d) {
                         d3.select(this)
-                                .attr("transform",
-                                function (d) {
+                                .attr("transform",function (d) {
                                     var x = arc.centroid(d)[ 0] * 0.3;
                                     var y = arc.centroid(d)[1] * 0.3;
                                     return "translate(" + x + "," + y + ")";
                                 })
                     })
-                    .on(
-                    "mouseout",
-                    function (d, i) {
+                    .on("mouseout" , function (d, i) {
                         d3.select(this)
-                            /* .transition()
-                             .duration(300)*/
                                 .attr("fill", color(i))
                                 .attr("transform", function (d) {
                                     return "translate(0,0)";
                                 })
                     });
-            /*   //添加文字
-             arcs.append("text")
-             .attr("transform", function (d) {
-             var x = arc.centroid(d)[0] * 1.3;  //计算弧的中心坐标
-             var y = arc.centroid(d)[1] * 1.3;
-             return "translate(" + x + "," + y + ")";
-             })
-             .attr("text-anchor", "middle")
-             .text(function (d) {
-             var percent = d.value / d3.sum(dataset, function (d) {
-             return d.value;
-             }) * 100;
-             return percent.toFixed(1) + "%";
-             });
-             */
-            /*     //添加弧上的直线
-             arcs.append("line")
-             .attr("stroke", "black")
-             .attr("x1", function (d) {
-             return arc.centroid(d)[0] * 2
-             })
-             .attr("y1", function (d) {
-             return arc.centroid(d)[1] * 2
-             })
-             .attr("x2", function (d) {
-             return arc.centroid(d)[0] * 2.2
-             })
-             .attr("y2", function (d) {
-             return arc.centroid(d)[1] * 2.2
-             });
 
-             //在弧外添加文字
-             arcs.append("text")
-             .attr("transform", function (d) {
-             var x = arc.centroid(d)[0] * 2.5;
-             var y = arc.centroid(d)[1] * 2.5;
-             return "translate(" + x + "," + y + ")";
-             })
-             .attr("text-anchor", "middle")
-             .text(function (d) {
-             return d.data.name;
-             });
-             */
 
             //添加一个提示框
             var tooltip = d3.select("body")
@@ -155,12 +113,7 @@
                     .attr("class", "tooltip")
                     .style("opacity", 0.0);
 
-            arcs.on("mouseover", function (d, i) {/*
-             鼠标移入时，
-             （1）通过 selection.html() 来更改提示框的文字
-             （2）通过更改样式 left 和 top 来设定提示框的位置,d3.event.pageX是鼠标相当于浏览器页面的坐标
-             （3）设定提示框的透明度为1.0（完全不透明）
-             */
+            arcs.on("mouseover", function (d, i) {
 
                 tooltip.html("目标IP:" + d.data.ip + "<br />过滤次数为:" + d.data.total)
                         .style("left", (d3.event.pageX) + "px")
@@ -168,9 +121,8 @@
                         .style("opacity", 1.0);
 
 
-                drawbar(d);
+                updatebar(d);
 
-                // color(i) 为被选择图形的颜色
                 tooltip.style("border", "2px solid " + color(i));
             })
                     .on("mousemove", function (d) {
@@ -183,55 +135,38 @@
                     .on("mouseout", function (d) {
                         /* 鼠标移出时，将透明度设定为0.0（完全透明）*/
                         tooltip.style("opacity", 0.0);
-                        rectexit.remove();
+
+                     //   rectexit.remove();
                     })
         }
 
 
+        drawbar();
 
 
 
-        var barwidth = 400;	//SVG绘制区域的宽度
-        var barheight = 400;	//SVG绘制区域的高度
+        var barsvg,yScale,barwidth,barheight,xAxisWidth,yAxisWidth,padding,yAxis,xAxis;
 
+        function drawbar() {
 
-        //x轴宽度
-        var xAxisWidth = 300;
+            barwidth = 450;	//SVG绘制区域的宽度
+            barheight = 500;	//SVG绘制区域的高度
 
-        //y轴宽度
-        var yAxisWidth = 300;
+            xAxisWidth = 320;
+            yAxisWidth = 350;
 
+            padding = {top: 70, right: 70, bottom: 70, left: 70};
 
-        //外边框
-        var padding = {top: 30, right: 30, bottom: 30, left: 50};
+            barsvg = d3.select("#bar")			//选择<body>
+                    .append("svg")			//在<body>中添加<svg>
+                    .attr("width", barwidth)	//设定<svg>的宽度属性
+                    .attr("height", barheight);//设定<svg>的高度属性
 
-        var barsvg = d3.select("body")			//选择<body>
-                .append("svg")			//在<body>中添加<svg>
-                .attr("width", barwidth)	//设定<svg>的宽度属性
-                .attr("height", barheight);//设定<svg>的高度属性
-
-        var rect,rectupdate,rectexit;
-
-
-        function drawbar(bardata) {
-
-
-
-
-
-
-
-
-
+            var rect,rectupdate,rectexit;
 
             color = d3.scale.category20();
 
-
-
-
-            var bdata = [bardata.data.freq.rule1 , bardata.data.freq.rule2 , bardata.data.freq.rule3 , bardata.data.freq.rule4];
-
-            console.log(bdata);
+           var bdata = [rule1 , rule2 , rule3 , rule4];
 
             //x轴比例尺
             var xScale = d3.scale.ordinal()
@@ -239,7 +174,7 @@
                     .rangeRoundBands([0, xAxisWidth], 0.2);
 
             //y轴比例尺
-            var yScale = d3.scale.linear()
+            yScale = d3.scale.linear()
                     .domain([0, d3.max(bdata , function(d) {
                         return d;
                     })])
@@ -253,11 +188,10 @@
             rect = 	rectupdate.enter()			//获取enter部分
                     .append("rect")	//添加rect元素，使其与绑定数组的长度一致
                     .attr("fill", function(d,i) {
+                        console.log(color(i));
                         return color(i);
                     })
                     .attr("x", function (d, i) {		//设置矩形的x坐标
-                        console.log(d);
-
                         return padding.left + xScale(i);
                     })
                     .attr("y", function (d) {		//设置矩形的y坐标
@@ -271,7 +205,6 @@
 
             rectexit = rectupdate.exit();
 
-            console.log(rect,rectexit);
 
             var text = barsvg.selectAll("text")
                     .data(bdata)			//绑定数据
@@ -292,26 +225,137 @@
                         return d;
                     });
 
-            var xAxis = d3.svg.axis()
+            xAxis = d3.svg.axis()
                     .scale(xScale)
                     .orient("bottom");
 
             yScale.range([yAxisWidth, 0]);
 
-            var yAxis = d3.svg.axis()
+            yAxis = d3.svg.axis()
                     .scale(yScale)
                     .orient("left");
 
             barsvg.append("g")
-                    .attr("class", "axis")
+                    .attr("class", "axis xx")
                     .attr("transform", "translate(" + padding.left + "," + (barheight - padding.bottom) + ")")
                     .call(xAxis);
 
             barsvg.append("g")
-                    .attr("class", "axis")
+                    .attr("class", "axis yy")
                     .attr("transform", "translate(" + padding.left + "," + (barheight - padding.bottom - yAxisWidth) + ")")
                     .call(yAxis);
 
+        }
+
+
+        //update条形图
+        function updatebar(bdata) {
+
+
+            var bardata = [bdata.data.freq.rule1,bdata.data.freq.rule2,bdata.data.freq.rule3,bdata.data.freq.rule4];
+
+            yScale.domain([0, d3.max(bardata)])
+                    .range([0, yAxisWidth])
+
+
+            var bars =  barsvg.selectAll("rect")
+                    .data(bardata)
+                    .transition()
+                    .duration(700)
+                    .attr("y", function (d) {		//设置矩形的y坐标
+                        return barheight - padding.bottom - yScale(d);
+                    })
+                    .attr("height", function (d) {	//设置矩形的高度
+                        return yScale(d);
+                    });
+
+            var text = barsvg.selectAll("text")
+                    .data(bardata)
+                    .attr("y", function (d) {
+                        return barheight - padding.bottom - yScale(d);
+                    })
+                    .text(function (d) {
+                        return d;
+                    });
+
+            yScale.range([yAxisWidth , 0]);
+
+            yAxis.scale(yScale);
+
+
+            barsvg.select(".yy")
+                    .transition()
+                    .duration(1000)
+                    .attr("transform", "translate(" + padding.left + "," + (barheight - padding.bottom - yAxisWidth) + ")")
+                    .call(yAxis);
+
+
+
+        }
+
+        drawtooltip();
+
+        function drawtooltip(){
+            var tooltip = d3.select("#tooltip")
+                    .attr("width",  400)
+                    .attr("height", 300)
+                    .attr("class", "tooltip")
+                    .style("left", "970px")
+                    .style("top", "280px")
+                    .style("opacity", 1.0)
+                    .style("border", "2px solid " + "#777777");
+
+            var title = tooltip.append("table")
+                    .attr("class", "title")
+                    .html("条形统计图颜色标识");
+
+            var des1 = tooltip
+                    .append("tr")
+                    .attr("class", "des")
+
+            des1.append("td")
+                    .attr("class", "desColor")
+                    .style("background-color", "#1f77b4")
+
+            des1.append("td")
+                    .attr("class", "desText")
+                    .html("第一种颜色");
+
+            var des2 = tooltip
+                    .append("tr")
+                    .attr("class", "des")
+
+            des2.append("td")
+                    .attr("class", "desColor")
+                    .style("background-color", "#aec7e8")
+
+            des2.append("td")
+                    .attr("class", "desText")
+                    .html("第二种颜色");
+
+            var des3 = tooltip
+                    .append("tr")
+                    .attr("class", "des")
+
+            des3.append("td")
+                    .attr("class", "desColor")
+                    .style("background-color", "#ff7f0e")
+
+            des3.append("td")
+                    .attr("class", "desText")
+                    .html("第三种颜色");
+
+            var des4 = tooltip
+                    .append("tr")
+                    .attr("class", "des")
+
+            des4.append("td")
+                    .attr("class", "desColor")
+                    .style("background-color", "#ffbb78")
+
+            des4.append("td")
+                    .attr("class", "desText")
+                    .html("第四种颜色");
         }
 
 
