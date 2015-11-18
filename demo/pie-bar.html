@@ -83,30 +83,17 @@
                     .attr( "transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
             //添加弧的路径元素
-            var piepath = arcs.append("path")
-
+            arcs.append("path")
+                    .attr("fill", function (d, i) {
+                        return color(i);
+                    })
                     .attr("d",function (d) {
                         return arc(d);  //使用弧生成器
                     })
-
-          /*          .transition().duration(1000)
-
-                    .attrTween("d", function(d) {  //渐变函数
-                        var start = {startAngle:0 ,endAngle:0 };
-                        var interpolate = d3.interpolate(start, d); //复合对象插值器
-                        return function(t){
-                            return arc(interpolate(t))
-                        };
-
-                    })*/
-                    .attr("fill", function (d, i) {
-                        return color(i);
-                    });
-            piepath
                     .on("mouseover", function (d) {
                         d3.select(this)
                                 .attr("transform",function (d) {
-                                    var x = arc.centroid(d)[0] * 0.3;
+                                    var x = arc.centroid(d)[ 0] * 0.3;
                                     var y = arc.centroid(d)[1] * 0.3;
                                     return "translate(" + x + "," + y + ")";
                                 })
@@ -118,6 +105,7 @@
                                     return "translate(0,0)";
                                 })
                     });
+
 
             //添加一个提示框
             var tooltip = d3.select("body")

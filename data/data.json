@@ -86,6 +86,39 @@
             {"ruleAction" : "规则动作3" , "count": 500},
             {"ruleAction" : "规则动作4" , "count": 700},
             {"ruleAction" : "规则动作5" , "count": 350}
+          ],
+  "access_method":
+          [
+            {"time": "1445822900" , "http":300 , "ssh":100 , "telnet":30 , "smtp":20 , "poppop3":10 , "ftp":10 , "imap":10 , "nntp":10 , "webmail":10 , "pptp":10  },
+            {"time": "1445822902" , "http":270 , "ssh":0 , "telnet":0 , "smtp":20 , "poppop3":0 , "ftp":10 , "imap":10 , "nntp":0 , "webmail":10 , "pptp":0  },
+            {"time": "1445822904" , "http":200 , "ssh":10 , "telnet":40 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":10 , "nntp":10 , "webmail":0 , "pptp":0  },
+            {"time": "1445822906" , "http":240 , "ssh":20 , "telnet":0 , "smtp":20 , "poppop3":0 , "ftp":0 , "imap":10 , "nntp":0 , "webmail":0 , "pptp":10  },
+            {"time": "1445822908" , "http":300 , "ssh":15 , "telnet":3 , "smtp":10 , "poppop3":5 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  },
+            {"time": "1445822910" , "http":500 , "ssh":40 , "telnet":15 , "smtp":10 , "poppop3":5 , "ftp":10 , "imap":10 , "nntp":5 , "webmail":5 , "pptp":0  },
+            {"time": "1445822912" , "http":150 , "ssh":100 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":10  },
+            {"time": "1445822914" , "http":290 , "ssh":10 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":10 , "imap":10 , "nntp":0 , "webmail":10 , "pptp":10  },
+            {"time": "1445822916" , "http":650 , "ssh":100 , "telnet":0 , "smtp":20 , "poppop3":10 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":10 , "pptp":0  },
+            {"time": "1445822918" , "http":250 , "ssh":0 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":10 , "imap":5 , "nntp":5 , "webmail":10 , "pptp":10  },
+            {"time": "1445822920" , "http":460 , "ssh":0 , "telnet":0 , "smtp":0 , "poppop3":10 , "ftp":0 , "imap":10 , "nntp":10 , "webmail":0 , "pptp":0  },
+            {"time": "1445822922" , "http":550 , "ssh":10 , "telnet":0 , "smtp":0 , "poppop3":5 , "ftp":5 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":10  },
+            {"time": "1445822924" , "http":390 , "ssh":20 , "telnet":0 , "smtp":20 , "poppop3":0 , "ftp":0, "imap":0 , "nntp":0 , "webmail":10 , "pptp":10  },
+            {"time": "1445822926" , "http":570 , "ssh":5 , "telnet":5 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":30 , "webmail":0 , "pptp":0  },
+            {"time": "1445822928" , "http":780 , "ssh":20 , "telnet":10 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  },
+            {"time": "1445822930" , "http":630 , "ssh":20 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":10 , "nntp":10 , "webmail":10 , "pptp":0  },
+            {"time": "1445822932" , "http":465 , "ssh":0 , "telnet":0 , "smtp":0 , "poppop3":20 , "ftp":20 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  },
+            {"time": "1445822934" , "http":730 , "ssh":0 , "telnet":20 , "smtp":20 , "poppop3":30 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  },
+            {"time": "1445822936" , "http":496 , "ssh":40 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":30  },
+            {"time": "1445822938" , "http":158 , "ssh":10 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":20  },
+            {"time": "1445822940" , "http":978 , "ssh":20 , "telnet":30 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":10  },
+            {"time": "1445822942" , "http":188 , "ssh":50 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":10 , "pptp":0  },
+            {"time": "1445822944" , "http":498 , "ssh":10 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":20 , "nntp":0 , "webmail":0 , "pptp":10  },
+            {"time": "1445822946" , "http":448 , "ssh":0 , "telnet":30 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":10 , "webmail":0 , "pptp":0  },
+            {"time": "1445822948" , "http":892 , "ssh":50 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":30 , "webmail":0 , "pptp":0  },
+            {"time": "1445822950" , "http":198 , "ssh":0 , "telnet":0 , "smtp":20 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  },
+            {"time": "1445822952" , "http":983 , "ssh":50 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":10 , "pptp":10  },
+            {"time": "1445822954" , "http":198 , "ssh":0 , "telnet":0 , "smtp":0 , "poppop3":30 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  },
+            {"time": "1445822956" , "http":849 , "ssh":0 , "telnet":0 , "smtp":0 , "poppop3":0 , "ftp":10 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":10  },
+            {"time": "1445822958" , "http":195 , "ssh":0 , "telnet":0 , "smtp":0 , "poppop3":10 , "ftp":0 , "imap":0 , "nntp":0 , "webmail":0 , "pptp":0  }
           ]
 }
 

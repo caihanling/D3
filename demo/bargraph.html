@@ -102,12 +102,12 @@
                   return padding.left + xScale(i);
               })
               .attr("y", function (d) {
-                  return height - padding.bottom - yScale(d);
+                  return height - padding.bottom - yScale(d.count);
               })
               .attr("dx", xScale.rangeBand() / 2)
               .attr("dy", "1em")
               .text(function (d) {
-                  return d;
+                  return d.count;
               });
 
       var xAxis = d3.svg.axis()

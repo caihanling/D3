@@ -119,6 +119,7 @@
 
          */
 
+        draw(center);
 
         function draw(newcenter) {
 
@@ -236,7 +237,7 @@
         var desColor1 = des1.append("div")
                 .attr("class", "desColor")
                 .style("background-color", "#60B9F4")
-                .on("mousedown", function () {
+        /*        .on("mousedown", function () {
                     if (mark == 0) {
                         newcenter = center.filter(function (d) {
                             return d.sex > 0;
@@ -253,7 +254,7 @@
                     draw(newcenter);
 
                     console.log(newcenter);
-                });
+                });*/
 
         var desTest1 = des1.append("div")
                 .attr("class", "desText")

@@ -1,0 +1,210 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>bargraph</title>
+</head>
+<style>
+
+    .axis path,
+    .axis line{
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+    }
+
+    .axis text {
+        font-family: sans-serif;
+        font-size: 11px;
+    }
+
+</style>
+<body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+
+
+    var width = 850;	//SVG绘制区域的宽度
+    var height = 500;	//SVG绘制区域的高度
+
+    var svg = d3.select("body")			//选择<body>
+            .append("svg")			//在<body>中添加<svg>
+            .attr("width", width)	//设定<svg>的宽度属性
+            .attr("height", height);//设定<svg>的高度属性
+
+
+
+    //x轴宽度
+    var xAxisWidth = 760;
+
+    //y轴宽度
+    var yAxisWidth = 400;
+
+
+    //外边框
+    var padding = {top: 30, right: 30, bottom: 30, left: 50};
+
+    color = d3.scale.category20();
+
+    var parseDate = d3.time.format("%m/%d/%Y, %H:%M:%S %p").parse;
+
+
+
+  d3.json("../data/data.json", function(error, data) {
+      if (error)
+          console.error(error);
+
+      var dataset = data.access_method;
+
+      dataset.forEach(function(d) {
+          d.total = d.http + d.ssh + d.telnet + d.smtp + d.poppop3 + d.ftp + d.imap + d.nntp + d.webmail + d.pptp;
+      })
+
+      console.log(dataset);
+
+
+      //x轴比例尺
+      var xScale = d3.time.scale()
+              .domain([d3.min(dataset, function(d) {
+                  return parseDate(getLocalTime(d.time)); }), d3.max(dataset, function(d) { return parseDate(getLocalTime(d.time)); })])
+              .range([0, xAxisWidth]);
+
+      //y轴比例尺
+      var yScale = d3.scale.linear()
+              .domain([0, d3.max(dataset , function(d) {
+                  return d.total;
+              })])
+              .range([0, yAxisWidth]);
+
+
+      var finaldata = [];
+      dataset.forEach(function(d,i) {
+          var group = [];
+          var groupdata = [];
+
+          group.push(d.http);
+          group.push(d.ssh);
+          group.push(d.telnet);
+          group.push(d.smtp);
+          group.push(d.poppop3);
+          group.push(d.ftp);
+          group.push(d.imap);
+          group.push(d.nntp);
+          group.push(d.webmail);
+          group.push(d.pptp);
+
+
+          groupdata.push(d.time);
+          groupdata.push(group);
+
+
+
+          finaldata.push(groupdata);
+
+      })
+
+
+     /* console.log(finaldata);*/
+
+
+
+      var rect = svg.selectAll("rect")
+              .data(finaldata)		//绑定数据
+              .enter()			//获取enter部分
+              .append("rect")
+           /*   .attr("fill", function(d,i) {
+                  return color(i);
+              })
+              .attr("fill" , color(2))
+              .attr("x", function (d, i) {		//设置矩形的x坐标
+                  return padding.left + xScale(parseDate(getLocalTime(d.time)));
+              })*/
+              rect.each(function(d,i) {
+
+                  d3.select(this)
+                          .attr("x", function () {		//设置矩形的x坐标
+
+                              return padding.left + xScale(parseDate(getLocalTime(d[0])));
+                          })
+                          .attr("y",  d[1].forEach(function() {//设置矩形的y坐标
+
+                              console.log(height - padding.bottom - yScale(d[1]));
+                                  return height - padding.bottom - yScale(d);
+
+                              }))
+
+                          .attr("fill" , function(i) {
+                              return color(i);
+                          })
+                          .attr("width", 20)		//设置矩形的宽度
+                          .attr("height", function () {	//设置矩形的高度
+
+
+                              return    d[1].forEach(function(d) {
+                               //   console.log(yScale(d));
+                                  return yScale(d);
+                              })
+
+                             /* return 100;*/
+                          });
+
+              })
+             /* .attr("y", function (d) {		//设置矩形的y坐标
+                  return height - padding.bottom - yScale(d.total);
+              })
+              .attr("width", 20)		//设置矩形的宽度
+              .attr("height", function (d) {	//设置矩形的高度
+                  return yScale(d.total);
+              });*/
+
+  /*    var text = svg.selectAll("text")
+              .data(dataset)			//绑定数据
+              .enter()				//获取enter部分
+              .append("text")			//添加text元素，使其与绑定数组的长度一致
+              .attr("fill", "white")
+              .attr("font-size", "14px")
+              .attr("text-anchor", "middle")
+              .attr("x", function (d, i) {
+                  return padding.left + xScale(i);
+              })
+              .attr("y", function (d) {
+                  return height - padding.bottom - yScale(d.total);
+              })
+              .attr("dx", 10)
+              .attr("dy", "1em")
+              .text(function (d) {
+                  return d.total;
+              });*/
+
+      var xAxis = d3.svg.axis()
+              .scale(xScale)
+              .orient("bottom");
+
+      yScale.range([yAxisWidth, 0]);
+
+      var yAxis = d3.svg.axis()
+              .scale(yScale)
+              .orient("left");
+
+      svg.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom) + ")")
+              .call(xAxis);
+
+      svg.append("g")
+              .attr("class", "axis")
+              .attr("transform", "translate(" + padding.left + "," + (height - padding.bottom - yAxisWidth) + ")")
+              .call(yAxis);
+
+  })
+
+    function getLocalTime(nS) {
+        return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+    }
+
+</script>
+
+</body>
+
+</html>
